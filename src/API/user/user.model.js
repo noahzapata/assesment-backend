@@ -1,9 +1,15 @@
 const { Schema, model, models } = require('mongoose');
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const userSchema = new Schema(
   {
     email: {
       type: String,
-      required: [true, 'This field is required'],
+      required: true,
+
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [emailRegex, 'Please fill a valid email address'],
       validate: [
         {
           async validator(value) {
@@ -29,6 +35,7 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

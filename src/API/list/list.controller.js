@@ -1,5 +1,6 @@
 const User = require('../user/user.model');
 const List = require('./list.model');
+
 const create = async (req, res) => {
   const data = req.body;
   const id = req.user;
@@ -7,7 +8,11 @@ const create = async (req, res) => {
   try {
     const user = await User.findById(id);
     const list = await List.create(data, id);
-    user.lists.push(list);
+    if (!user) {
+      throw new Error('Invalid user');
+    }
+
+    user.lists.unshift(list);
     await user.save({ validateBeforeSave: false });
     return res.status(201).json({ message: 'List created', data: list });
   } catch (err) {
