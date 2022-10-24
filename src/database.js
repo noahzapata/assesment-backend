@@ -5,12 +5,18 @@ let connection;
 const connect = async () => {
   if (connection) return;
 
-  const mongoUri = process.env.MONGO_URI;
+  const mongoUri =
+    process.env.MONGO_URI ||
+    'mongodb+srv://APIroot:APIroot@cluster0.qvctdjf.mongodb.net/FAVS?retryWrites=true&w=majority';
 
   connection = mongoose.connection;
 
   connection.once('open', () => {
     console.log('Connection successfully');
+  });
+
+  connection.on('disconnected', () => {
+    console.log('Disconnected successfull');
   });
 
   connection.on('error', (error) => {
@@ -20,4 +26,10 @@ const connect = async () => {
   await mongoose.connect(mongoUri);
 };
 
-module.exports = { connect };
+async function disconnected() {
+  if (!connection) return;
+
+  await mongoose.disconnect();
+}
+
+module.exports = { connect, disconnected };
