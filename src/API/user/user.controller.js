@@ -33,7 +33,7 @@ const signIn = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.find({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       throw new Error('Some of your credentials are invalid');
@@ -47,7 +47,7 @@ const signIn = async (req, res) => {
     });
     return res
       .status(201)
-      .json({ message: 'Login successfully', data: { email, token } });
+      .json({ message: 'Login successfully', data: { token } });
   } catch (err) {
     return res
       .status(400)

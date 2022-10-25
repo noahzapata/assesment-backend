@@ -1,19 +1,21 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
 const { connect } = require('./database');
 const routesConfig = require('./routes.config');
+const { expressConfig } = require('./express');
 
 const app = express();
-const port = 8080;
-connect();
+const PORT = process.env.PORT || 8080;
 
-app.use(cors());
-app.use(express.json());
-app.use(morgan('dev'));
-routesConfig(app);
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-app.listen(port, () => {
-  console.log(`Server listenning on http://localhost:${port}`);
+app.listen(PORT, () => {
+  expressConfig(app);
+  connect();
+  routesConfig(app);
+  console.log(
+    `Server listenning on http://localhost:${PORT} in ${NODE_ENV} mode`
+  );
 });
+
+module.exports = app;

@@ -32,4 +32,10 @@ async function disconnected() {
   await mongoose.disconnect();
 }
 
-module.exports = { connect, disconnected };
+async function cleanup() {
+  for (const collection in connection.collections) {
+    await connection.collections[collection].deleteMany({});
+  }
+}
+
+module.exports = { connect, disconnected, cleanup };

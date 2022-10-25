@@ -12,13 +12,13 @@ const create = async (req, res) => {
       throw new Error('Invalid user');
     }
 
-    user.lists.unshift(list);
+    user.lists.push(list);
     await user.save({ validateBeforeSave: false });
     return res.status(201).json({ message: 'List created', data: list });
   } catch (err) {
     return res
       .status(400)
-      .json({ message: 'List could not be created', error: err });
+      .json({ message: 'List could not be created', error: err.message });
   }
 };
 
